@@ -17,6 +17,7 @@ public class TestLevelState : StateBase {
 
     public override void OnExit() {
         Gameboard.allowMoveInput = false;
+        levelCreatorManager.SetMapSize(levelCreatorManager.currentLevelCreatorSize);
     }
 
     public override void OnUpdate() {

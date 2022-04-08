@@ -139,6 +139,9 @@ public class Gameboard : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.S)) {
             Move(Vector2Int.down);
         }
+        if (Input.GetKeyDown(KeyCode.R)) {
+            ResetLevelStats();
+        }
 
     }
 

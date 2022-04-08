@@ -100,5 +100,5 @@ MonoBehaviour:
     tile: {fileID: 11400000, guid: 5341a48b0fa08b741a218e30e0cb50bf, type: 2}
   - position: {x: 0, y: 3, z: 0}
     tile: {fileID: 11400000, guid: 5341a48b0fa08b741a218e30e0cb50bf, type: 2}
-  showInfoText: 1
-  infoText: 'Goal: <br>Fill out every red Block by moving your orange Blocks'
+  infoText: 'Fill out every red Block by moving your orange Blocksge Blocks<br>Keyboard:
+    WASD and R for Restart'

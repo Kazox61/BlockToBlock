@@ -19,12 +19,15 @@ public class LevelCreatorManager : MonoBehaviour {
     public LevelTile currentTile;
     public GameObject activeIndicator;
     public ScriptableLevel savedLevel;
+    public Size currentLevelCreatorSize;
 
     public void Start() {
         activeIndicator = indicatorGrid;
         currentTile = gridTile;
+        SetMapSize(Size.large);
     }
     public void SetMapSize(Size size) {
+        currentLevelCreatorSize = size;
         if (size.Equals(Size.large)) {
             cam.orthographicSize = 9;
         }
