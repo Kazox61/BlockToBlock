@@ -5,6 +5,7 @@ using UnityEngine.Tilemaps;
 using System.Linq;
 using UnityEditor;
 using TMPro;
+using System.IO;
 
 public class LevelManager : MonoBehaviour {
     [SerializeField] private Tilemap resultMap, pieceMap, gridMap;
@@ -91,6 +92,25 @@ public class LevelManager : MonoBehaviour {
 
     public void LoadLevel() {
         LoadLevel(this.levelIndex);
+    }
+
+    public void ConvertLevelJsonToScriptableLevel() {
+        var path = Application.persistentDataPath + "/levelData.json";
+
+        if (File.Exists(path)) {
+            using (StreamReader reader = new StreamReader(path)) {
+                string json = reader.ReadToEnd();
+
+                var level = JsonUtility.FromJson<Level>(json);
+
+                var levelData = level.ToScriptableLevel();
+                levelData.levelIndex = levelIndex;
+
+#if UNITY_EDITOR
+                ScriptableObjectUtility.SaveLeveFile(levelData);
+#endif
+            }
+        }
     }
 }
 

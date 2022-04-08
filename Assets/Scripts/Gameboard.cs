@@ -147,7 +147,6 @@ public class Gameboard : MonoBehaviour {
 
     public void MoveUp() {
         if (allowMoveInput) {
-            Debug.Log("UP");
             Move(Vector2Int.up);
         }
     }

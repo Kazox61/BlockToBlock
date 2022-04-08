@@ -1089,7 +1089,7 @@ GameObject:
   - component: {fileID: 122751823}
   - component: {fileID: 122751822}
   m_Layer: 5
-  m_Name: Settings
+  m_Name: PanelSettings
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1880,7 +1880,7 @@ GameObject:
   - component: {fileID: 317768692}
   - component: {fileID: 317768691}
   m_Layer: 5
-  m_Name: Dropdown
+  m_Name: DropdownSize
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2177,7 +2177,7 @@ GameObject:
   - component: {fileID: 380252357}
   - component: {fileID: 380252356}
   m_Layer: 5
-  m_Name: Back
+  m_Name: ButtonBack
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2302,139 +2302,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 4404206657422360432, guid: afddc0ad6a1415a4a98d12f691ce81f3, type: 3}
   m_PrefabInstance: {fileID: 1626215552}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &399529179
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 399529180}
-  - component: {fileID: 399529183}
-  - component: {fileID: 399529182}
-  - component: {fileID: 399529181}
-  m_Layer: 5
-  m_Name: PreviousLevel
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &399529180
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 399529179}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1057479068}
-  m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -400, y: 0}
-  m_SizeDelta: {x: 150, y: 150}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &399529181
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 399529179}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Navigation:
-    m_Mode: 3
-    m_WrapAround: 0
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
-    m_SelectOnLeft: {fileID: 0}
-    m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
-  m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
-    m_ColorMultiplier: 1
-    m_FadeDuration: 0.1
-  m_SpriteState:
-    m_HighlightedSprite: {fileID: 0}
-    m_PressedSprite: {fileID: 0}
-    m_SelectedSprite: {fileID: 0}
-    m_DisabledSprite: {fileID: 0}
-  m_AnimationTriggers:
-    m_NormalTrigger: Normal
-    m_HighlightedTrigger: Highlighted
-    m_PressedTrigger: Pressed
-    m_SelectedTrigger: Selected
-    m_DisabledTrigger: Disabled
-  m_Interactable: 1
-  m_TargetGraphic: {fileID: 399529182}
-  m_OnClick:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: CanvasManager, Assembly-CSharp
-        m_MethodName: LoadScene
-        m_Mode: 3
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: -1
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
---- !u!114 &399529182
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 399529179}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 0808619d4e2144e2aa965a8768addde2, type: 3}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
---- !u!222 &399529183
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 399529179}
-  m_CullTransparentMesh: 1
 --- !u!1 &401484841
 GameObject:
   m_ObjectHideFlags: 0
@@ -2447,7 +2314,7 @@ GameObject:
   - component: {fileID: 401484844}
   - component: {fileID: 401484843}
   m_Layer: 5
-  m_Name: LevelCreatorPanel
+  m_Name: PanelLevelCreator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2968,7 +2835,7 @@ GameObject:
   - component: {fileID: 567612168}
   - component: {fileID: 567612167}
   m_Layer: 5
-  m_Name: Level-Creator
+  m_Name: ButtonLevelCreator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3482,7 +3349,7 @@ GameObject:
   - component: {fileID: 601916815}
   - component: {fileID: 601916814}
   m_Layer: 5
-  m_Name: InfoPanel
+  m_Name: PanelInfo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3732,7 +3599,7 @@ GameObject:
   - component: {fileID: 649261006}
   - component: {fileID: 649261005}
   m_Layer: 5
-  m_Name: Save
+  m_Name: ButtonSave
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3929,7 +3796,7 @@ GameObject:
   - component: {fileID: 692479831}
   - component: {fileID: 692479830}
   m_Layer: 5
-  m_Name: Load
+  m_Name: ButtonLoad
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4265,7 +4132,7 @@ GameObject:
   - component: {fileID: 729216824}
   - component: {fileID: 729216823}
   m_Layer: 5
-  m_Name: Controls
+  m_Name: PanelControls
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4794,7 +4661,7 @@ GameObject:
   - component: {fileID: 835148232}
   - component: {fileID: 835148236}
   m_Layer: 5
-  m_Name: Fading
+  m_Name: PanelFading
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5076,7 +4943,7 @@ GameObject:
   - component: {fileID: 932107147}
   - component: {fileID: 932107146}
   m_Layer: 5
-  m_Name: Level Completed
+  m_Name: TextLevelCompleted
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5095,7 +4962,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1057479068}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -5233,7 +5100,7 @@ MonoBehaviour:
   resultMap: {fileID: 523215304}
   pieceMap: {fileID: 573911301}
   gridMap: {fileID: 1568633968}
-  levelIndex: 10
+  levelIndex: 20
 --- !u!4 &950548461
 Transform:
   m_ObjectHideFlags: 0
@@ -5526,7 +5393,7 @@ GameObject:
   - component: {fileID: 1023614712}
   - component: {fileID: 1023614711}
   m_Layer: 5
-  m_Name: ClearAll
+  m_Name: ButtonClearAll
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5804,7 +5671,7 @@ GameObject:
   - component: {fileID: 1057479070}
   - component: {fileID: 1057479069}
   m_Layer: 5
-  m_Name: EndScreen
+  m_Name: PanelEndScreenLevel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5825,7 +5692,6 @@ RectTransform:
   - {fileID: 2000990031}
   - {fileID: 1348721611}
   - {fileID: 1752422397}
-  - {fileID: 399529180}
   - {fileID: 932107145}
   m_Father: {fileID: 1105007872}
   m_RootOrder: 1
@@ -6151,7 +6017,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1105007872}
   m_Layer: 5
-  m_Name: Gameplay
+  m_Name: PanelGameplayOverlay
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6194,7 +6060,7 @@ GameObject:
   - component: {fileID: 1109315222}
   - component: {fileID: 1109315221}
   m_Layer: 5
-  m_Name: ExitGameButton
+  m_Name: ButtonExitGame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7400,7 +7266,7 @@ GameObject:
   - component: {fileID: 1308189563}
   - component: {fileID: 1308189562}
   m_Layer: 5
-  m_Name: InfoText
+  m_Name: TextInfo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7541,7 +7407,7 @@ GameObject:
   - component: {fileID: 1348721613}
   - component: {fileID: 1348721612}
   m_Layer: 5
-  m_Name: Menu
+  m_Name: ButtonMenu
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7943,7 +7809,7 @@ GameObject:
   - component: {fileID: 1447252646}
   - component: {fileID: 1447252645}
   m_Layer: 5
-  m_Name: Test
+  m_Name: ButtonTest
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8211,7 +8077,7 @@ GameObject:
   - component: {fileID: 1451503861}
   - component: {fileID: 1451503860}
   m_Layer: 5
-  m_Name: Settings
+  m_Name: PanelToolBar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9254,7 +9120,7 @@ GameObject:
   - component: {fileID: 1589143146}
   - component: {fileID: 1589143145}
   m_Layer: 5
-  m_Name: Blocks
+  m_Name: PanelSelectableBlocks
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9756,7 +9622,7 @@ GameObject:
   - component: {fileID: 1752422399}
   - component: {fileID: 1752422398}
   m_Layer: 5
-  m_Name: Restart
+  m_Name: ButtonRestart
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10034,7 +9900,7 @@ GameObject:
   - component: {fileID: 1828610819}
   - component: {fileID: 1828610818}
   m_Layer: 5
-  m_Name: Back
+  m_Name: ButtonBack
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10856,7 +10722,7 @@ GameObject:
   - component: {fileID: 2000990033}
   - component: {fileID: 2000990032}
   m_Layer: 5
-  m_Name: NextLevel
+  m_Name: ButtonNextLevel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11126,7 +10992,7 @@ GameObject:
   - component: {fileID: 2036306064}
   - component: {fileID: 2036306063}
   m_Layer: 5
-  m_Name: TestLevelPanel
+  m_Name: ButtonTestLevel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11434,7 +11300,7 @@ GameObject:
   - component: {fileID: 2112232130}
   - component: {fileID: 2112232129}
   m_Layer: 5
-  m_Name: Topbar
+  m_Name: ButtonTopbar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11760,7 +11626,7 @@ GameObject:
   - component: {fileID: 7994413808230149914}
   - component: {fileID: 7994413808230149915}
   m_Layer: 5
-  m_Name: Settings
+  m_Name: ButtonSettings
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -12043,7 +11909,7 @@ GameObject:
   - component: {fileID: 7994413808458366712}
   - component: {fileID: 7994413808458366713}
   m_Layer: 5
-  m_Name: StartScreen
+  m_Name: PanelStartScreen
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -12121,7 +11987,7 @@ GameObject:
   - component: {fileID: 7994413809191687720}
   - component: {fileID: 7994413809191687721}
   m_Layer: 5
-  m_Name: LevelSelection
+  m_Name: PanelLevelSelection
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -12207,7 +12073,7 @@ GameObject:
   - component: {fileID: 7994413809645046846}
   - component: {fileID: 7994413809645046847}
   m_Layer: 5
-  m_Name: LevelSelection
+  m_Name: ButtonLevelSelection
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
