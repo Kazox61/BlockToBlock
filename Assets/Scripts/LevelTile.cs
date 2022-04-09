@@ -6,6 +6,8 @@ using UnityEngine.Tilemaps;
 [CreateAssetMenu(fileName ="New Tile", menuName = "2D/Tiles/Default Tile")]
 public class LevelTile : Tile{
     public TileType type;
+    public int teleportIndex;
+    public int teleportDir;
 }
 
 [System.Serializable]
@@ -13,5 +15,6 @@ public enum TileType {
     red,
     orange,
     green,
-    grid
+    grid,
+    teleport
 }

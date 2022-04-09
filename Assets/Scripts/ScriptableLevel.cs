@@ -10,20 +10,9 @@ public class ScriptableLevel : ScriptableObject {
     public List<SaveTile> resultTiles = new List<SaveTile>();
     public List<SaveTile> pieceTiles = new List<SaveTile>();
     public List<SaveTile> gridTiles = new List<SaveTile>();
+    public List<SaveTile> teleportTiles = new List<SaveTile>();
 
     public string infoText;
-
-    public Level ToLevel() {
-        var level = new Level() {
-            levelIndex = this.levelIndex,
-            resultTiles = this.resultTiles,
-            pieceTiles = this.pieceTiles,
-            gridTiles = this.gridTiles,
-            infoText = this.infoText
-
-        };
-        return level;
-    }
 
     public string Serialize() {
         var builder = new StringBuilder();
@@ -42,6 +31,11 @@ public class ScriptableLevel : ScriptableObject {
         builder.Append("g[");
         foreach (var gridTile in gridTiles) {
             builder.Append($"{(int)gridTile.type}({gridTile.position.x}, {gridTile.position.y})");
+        }
+        builder.Append("]");
+        builder.Append("t[");
+        foreach (var teleportTile in teleportTiles) {
+            builder.Append($"{(int)teleportTile.type}({teleportTile.position.x}, {teleportTile.position.y})");
         }
         builder.Append("]");
 
@@ -109,20 +103,24 @@ public class ScriptableLevel : ScriptableObject {
             newLevel.gridTiles.Add(saveTile);
         }
 
-        return newLevel;
-    }
-
-    IEnumerable<SaveTile> GetTilesFromMap(Tilemap map) {
-        foreach (var pos in map.cellBounds.allPositionsWithin) {
-            if (map.HasTile(pos)) {
-                var levelTile = map.GetTile<LevelTile>(pos);
-                yield return new SaveTile() {
-                    position = pos,
-                    type = levelTile.type
-                };
-
+        var teleportPositions = maps[3].Remove(0, 2).Split(")");
+        foreach (var teleportPosition in teleportPositions) {
+            if (teleportPosition == "") {
+                continue;
             }
+            var d = teleportPosition.Split('(');
+            Int32.TryParse(d[0], out int result);
+            var type = (TileType)result;
+
+            var xy = d[1].Split(',');
+            Vector3Int pos = new Vector3Int(Int32.Parse(xy[0]), Int32.Parse(xy[1]));
+            var saveTile = new SaveTile() {
+                position = pos,
+                type = type
+            };
+            newLevel.teleportTiles.Add(saveTile);
         }
+        return newLevel;
     }
 }
 
@@ -131,24 +129,6 @@ public class ScriptableLevel : ScriptableObject {
 public class SaveTile {
     public Vector3Int position;
     public TileType type;
-}
-
-public class Level {
-    public int levelIndex;
-    public List<SaveTile> resultTiles;
-    public List<SaveTile> pieceTiles;
-    public List<SaveTile> gridTiles;
-
-    public string infoText;
-
-
-    public ScriptableLevel ToScriptableLevel() {
-        var scriptableLevel = ScriptableObject.CreateInstance<ScriptableLevel>();
-        scriptableLevel.levelIndex = this.levelIndex;
-        scriptableLevel.resultTiles = this.resultTiles;
-        scriptableLevel.pieceTiles = this.pieceTiles;
-        scriptableLevel.gridTiles = this.gridTiles;
-        scriptableLevel.infoText = this.infoText;
-        return scriptableLevel;
-    }
+    public int teleportIndex;
+    public int teleportDir;
 }
