@@ -71,6 +71,7 @@ public class GameController : MonoBehaviour {
         if (IngameState.timer > 0 || FinishedLevelState.timer > 0) return;
         panelStartScreen.SetActive(true);
         panelGameUI.SetActive(false);
+        panelTopBar.SetActive(false);
         gridDrawer.SetActive(false);
         StateMachine.TryEnterState(MenuState);
     }
