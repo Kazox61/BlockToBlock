@@ -22,9 +22,8 @@ public class LevelManagerEditor : Editor {
         if (GUILayout.Button("Load Map")) {
             script.LoadLevel();
         }
-
-        if (GUILayout.Button("Update Settings")) {
-
+        if (GUILayout.Button("Convert")) {
+            script.ConvertLevelJsonToScriptableLevel();
         }
     }
 }

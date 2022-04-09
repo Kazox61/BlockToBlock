@@ -25,7 +25,8 @@ public class FinishedLevelState : StateBase {
     }
 
     public override void OnExit() {
-        GameController.endScreen.SetActive(false);
+        GameController.panelEndScreenLevel.SetActive(false);
+        timer = 0;
     }
 
     public override void OnUpdate() {
