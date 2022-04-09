@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class IngameState : StateBase {
 
-    private float timer = 0;
+    public float timer = 0;
 
     private float timeTillAnimationStarts = 2;
     private float timeTillRemoveGameUI = 3;
@@ -26,7 +26,7 @@ public class IngameState : StateBase {
 
     public override void OnExit() {
         Gameboard.allowMoveInput = false;
-
+        timer = 0;
     }
 
     public override void OnUpdate() {
@@ -45,7 +45,7 @@ public class IngameState : StateBase {
         }
 
         if (timer >= timeTillRemoveGameUI && !triggeredEndScreen) {
-            GameController.ShowEndScreen();
+            GameController.ShowPanelEndScreen();
             triggeredEndScreen = true;
         }
 

@@ -36,6 +36,9 @@ public class Gameboard : MonoBehaviour {
     }
 
     public void ResetLevelStats() {
+        if (gameController.IngameState.timer > 0) return;
+
+
         cells.Clear();
 
         currentLevelData = levelManager.LoadLevel(currentLevel);
@@ -49,18 +52,20 @@ public class Gameboard : MonoBehaviour {
     }
 
     public void PlaySameLevelAgain() {
+        if (gameController.FinishedLevelState.timer > 0) return;
         gameController.StateMachine.TryEnterState(gameController.IngameState);
         ResetLevelStats();
+        gameController.ShowPanelGameUI();
     }
 
     public void LoadLevel(int levelIndex) {
         if (gameController.StateMachine.CurrentState == gameController.MenuState) {
             gameController.StateMachine.TryEnterState(gameController.IngameState);
         }
-        gameController.gameplay.SetActive(true);
-        gameController.startscreen.SetActive(false);
-        gameController.levelselection.SetActive(false);
-        gameController.ShowGameUI();
+        gameController.panelGameUI.SetActive(true);
+        gameController.panelStartScreen.SetActive(false);
+        gameController.panelLevelSeletion.SetActive(false);
+        gameController.ShowPanelGameUI();
 
         currentLevel = levelIndex;
         indexText.text = $"Level {currentLevel}";
@@ -139,12 +144,14 @@ public class Gameboard : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.S)) {
             Move(Vector2Int.down);
         }
+        if (Input.GetKeyDown(KeyCode.R)) {
+            ResetLevelStats();
+        }
 
     }
 
     public void MoveUp() {
         if (allowMoveInput) {
-            Debug.Log("UP");
             Move(Vector2Int.up);
         }
     }

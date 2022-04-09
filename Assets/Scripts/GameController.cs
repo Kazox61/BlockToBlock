@@ -2,7 +2,26 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameController : MonoBehaviour { 
+public class GameController : MonoBehaviour {
+    #region References
+    [Header("Panels")]
+    public GameObject panelStartScreen;
+    public GameObject panelLevelSeletion, panelLevels, panelSettings;
+    public GameObject panelGameUI, panelControls, panelEndScreenLevel, panelTopBar, panelInfo;
+    public GameObject panelFading, panelLevelCreator, panelToolbar, panelSelectableBlocks, panelTestLevel;
+
+    [Header("Others")]
+    public GameSettings gameSettings;
+    public LevelCreatorManager levelCreatorManager;
+    [SerializeField] private Gameboard gameboard;
+    [SerializeField] private LevelManager levelManager;
+    public Animator anim;
+
+    public GameObject gridDrawer;
+
+    #endregion
+
+
     public StateMachine StateMachine { get; private set; }
     public IngameState IngameState { get; private set; }
     public FinishedLevelState FinishedLevelState { get; private set; }
@@ -10,22 +29,6 @@ public class GameController : MonoBehaviour {
     public LevelCreationState LevelCreationState { get; private set; }
     public TestLevelState TestLevelState { get; private set; }
 
-    public GameObject gridDrawer;
-    public GameObject testLevelPanel;
-    public GameObject levelCreatorPanel;
-    public GameSettings gameSettings;
-    public GameObject endScreen;
-    public GameObject topBar;
-    public GameObject controls;
-    public GameObject gameplay;
-    public GameObject startscreen;
-    public GameObject levelselection;
-    public GameObject infoPanel;
-    public LevelCreatorManager levelCreatorManager;
-
-    public Animator anim;
-    [SerializeField] private Gameboard gameboard;
-    [SerializeField] private LevelManager levelManager;
 
     public void Awake() {
         StateMachine = new StateMachine();
@@ -48,40 +51,40 @@ public class GameController : MonoBehaviour {
         StateMachine.CurrentState.OnUpdate();
     }
 
-
-    public void ShowEndScreen() {
-        endScreen.SetActive(true);
-        topBar.SetActive(false);
-        controls.SetActive(false);
-       
+    #region methods
+    public void ShowPanelEndScreen() {
+        panelEndScreenLevel.SetActive(true);
+        panelTopBar.SetActive(false);
+        panelControls.SetActive(false);
     }
 
-    public void ShowGameUI() {
-        endScreen.SetActive(false);
-        topBar.SetActive(true);
+    public void ShowPanelGameUI() {
+        panelEndScreenLevel.SetActive(false);
+        panelTopBar.SetActive(true);
         if (gameSettings.mobile) {
-            controls.SetActive(true);
+            panelControls.SetActive(true);
         }
     }
 
+
+    public void ShowPanelStartScreen() {
+        if (IngameState.timer > 0 || FinishedLevelState.timer > 0) return;
+        panelStartScreen.SetActive(true);
+        panelGameUI.SetActive(false);
+        gridDrawer.SetActive(false);
+        StateMachine.TryEnterState(MenuState);
+    }
 
     public void NextLevelButtonPressed() {
         FinishedLevelState.hasPressedNextLevelButton = true;
     }
 
-    public void ActivateHomeMenuScreen() {
-        startscreen.SetActive(true);
-        gameplay.SetActive(false);
-        gridDrawer.SetActive(false);
-        StateMachine.TryEnterState(MenuState);
-    }
-
-    public void ToggleInfoPanel() {
-        if (infoPanel.active) {
-            infoPanel.SetActive(false);
+    public void TogglePanelInfo() {
+        if (panelInfo.activeInHierarchy) {
+            panelInfo.SetActive(false);
         }
         else {
-            infoPanel.SetActive(true);
+            panelInfo.SetActive(true);
         }
     }
 
@@ -89,23 +92,24 @@ public class GameController : MonoBehaviour {
         if (!levelCreatorManager.CanRunLevel()) return;
         levelCreatorManager.SaveLevel();
         StateMachine.TryEnterState(TestLevelState);
-        levelCreatorPanel.SetActive(false);
-        gameplay.SetActive(true);
-        controls.SetActive(true);
-        testLevelPanel.SetActive(true);
+        panelLevelCreator.SetActive(false);
+        panelGameUI.SetActive(true);
+        panelControls.SetActive(true);
+        panelTestLevel.SetActive(true);
         gridDrawer.SetActive(false);
     }
 
     public void ChangeToCreationState() {
         StateMachine.TryEnterState(LevelCreationState);
         gridDrawer.SetActive(true);
-        levelCreatorPanel.SetActive(true);
-        controls.SetActive(true);
-        testLevelPanel.SetActive(false);
-        gameplay.SetActive(false);
+        panelLevelCreator.SetActive(true);
+        panelControls.SetActive(true);
+        panelTestLevel.SetActive(false);
+        panelGameUI.SetActive(false);
     }
 
     public void ExitGame() {
         Application.Quit();
     }
+    #endregion
 }

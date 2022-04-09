@@ -19,12 +19,15 @@ public class LevelCreatorManager : MonoBehaviour {
     public LevelTile currentTile;
     public GameObject activeIndicator;
     public ScriptableLevel savedLevel;
+    public Size currentLevelCreatorSize;
 
     public void Start() {
         activeIndicator = indicatorGrid;
         currentTile = gridTile;
+        SetMapSize(Size.large);
     }
     public void SetMapSize(Size size) {
+        currentLevelCreatorSize = size;
         if (size.Equals(Size.large)) {
             cam.orthographicSize = 9;
         }
@@ -106,22 +109,20 @@ public class LevelCreatorManager : MonoBehaviour {
     }
 
     public void SaveJsonLevelDataToHardDrive() {
-        var path = Application.persistentDataPath + "/levelData.json";
+        var path = Application.persistentDataPath + "/levelData.txt";
 
         var leveldata = levelManager.GetLevelData();
-        var level = leveldata.ToLevel();
-        var json = JsonUtility.ToJson(level);
 
         FileStream fileStream = new FileStream(path, FileMode.Create);
 
         using(StreamWriter writer = new StreamWriter(fileStream)) {
-            writer.Write(json);
+            writer.Write(leveldata.Serialize());
         }
 
     }
 
     public void LoadJsonLevelDataToHardDrive() {
-        var path = Application.persistentDataPath + "/levelData.json";
+        var path = Application.persistentDataPath + "/levelData.txt";
 
         if (File.Exists(path)) {
             using (StreamReader reader = new StreamReader(path)) {
