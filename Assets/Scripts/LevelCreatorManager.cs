@@ -62,6 +62,7 @@ public class LevelCreatorManager : MonoBehaviour {
     }
 
     public void SelectDrawingBlock(int index) {
+        gameController.DisableTeleportFields();
         if (index == 0) {
             currentTile = gridTile;
             activeIndicator.SetActive(false);
@@ -87,6 +88,7 @@ public class LevelCreatorManager : MonoBehaviour {
             activeIndicator.SetActive(true);
         }
         else if (index == 4) {
+            gameController.ShowTeleportFields();
             currentTile = teleportTile;
             activeIndicator.SetActive(false);
             activeIndicator = indicatorTeleport;
@@ -134,31 +136,30 @@ public class LevelCreatorManager : MonoBehaviour {
     }
 
     public void SaveJsonLevelDataToHardDrive() {
-        var path = Application.persistentDataPath + "/levelData.txt";
+        var path = Application.persistentDataPath + "/levelData.json";
 
         var leveldata = levelManager.GetLevelData();
 
         FileStream fileStream = new FileStream(path, FileMode.Create);
 
         using(StreamWriter writer = new StreamWriter(fileStream)) {
-            writer.Write(leveldata.Serialize());
+            var json = JsonUtility.ToJson(leveldata.ToLevel());
+            writer.Write(json);
         }
 
     }
 
     public void LoadJsonLevelDataFromHardDrive() {
-        var path = Application.persistentDataPath + "/levelData.txt";
+        var path = Application.persistentDataPath + "/levelData.json";
 
         if (File.Exists(path)) {
             using (StreamReader reader = new StreamReader(path)) {
                 string data = reader.ReadToEnd();
 
-                var levelData = ScriptableLevel.Deserialize(data);
+                var level = JsonUtility.FromJson<Level>(data);
 
-                levelData.levelIndex = 999;
-                levelData.name = $"Level {999}";
 
-                levelManager.LoadLevel(levelData);
+                levelManager.LoadLevel(level.ToScriptableLevel());
             }
         }
 

@@ -17,7 +17,7 @@ public class GameController : MonoBehaviour {
     [SerializeField] private LevelManager levelManager;
     public Animator anim;
 
-    public GameObject gridDrawer;
+    public GameObject gridDrawer, panelTeleportInputs;
 
     #endregion
 
@@ -49,6 +49,10 @@ public class GameController : MonoBehaviour {
 
     public void Update() {
         StateMachine.CurrentState.OnUpdate();
+
+        if (Input.GetKeyDown(KeyCode.M)) {
+            ScreenCapture.CaptureScreenshot("LevelCreator.png", 2);
+        }
     }
 
     #region methods
@@ -113,4 +117,12 @@ public class GameController : MonoBehaviour {
         Application.Quit();
     }
     #endregion
+
+    public void ShowTeleportFields() {
+        panelTeleportInputs.SetActive(true);
+    }
+
+    public void DisableTeleportFields() {
+        panelTeleportInputs.SetActive(false);
+    }
 }

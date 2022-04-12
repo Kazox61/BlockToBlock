@@ -112,18 +112,20 @@ public class LevelManager : MonoBehaviour {
     }
 
     public void ConvertLevelJsonToScriptableLevel() {
-        var path = Application.persistentDataPath + "/levelData.txt";
+        var path = Application.persistentDataPath + "/levelData.json";
 
         if (File.Exists(path)) {
             using (StreamReader reader = new StreamReader(path)) {
                 string data = reader.ReadToEnd();
 
-                var levelData = ScriptableLevel.Deserialize(data);
+                var level = JsonUtility.FromJson<Level>(data);
 
-                levelData.levelIndex = levelIndex;
-                levelData.name = $"Level {levelIndex}";
+                var slevel = level.ToScriptableLevel();
+                slevel.levelIndex = levelIndex;
+                slevel.name = $"Level {levelIndex}";
+
 #if UNITY_EDITOR
-                ScriptableObjectUtility.SaveLeveFile(levelData);
+                ScriptableObjectUtility.SaveLeveFile(slevel);
 #endif
             }
         }

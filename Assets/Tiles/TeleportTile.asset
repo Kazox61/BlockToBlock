@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c1766df5bff78c4888c1a93f919b02f, type: 3}
   m_Name: TeleportTile
   m_EditorClassIdentifier: 
-  m_Sprite: {fileID: 21300000, guid: ca621a47cc3f2814f8c899e1496281e5, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 58cc5d9e780248243b8f922105f05b7f, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 0.25490198}
   m_Transform:
     e00: 1
@@ -35,3 +35,5 @@ MonoBehaviour:
   m_Flags: 1
   m_ColliderType: 1
   type: 4
+  teleportIndex: 0
+  teleportDir: 0

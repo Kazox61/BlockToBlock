@@ -14,6 +14,16 @@ public class ScriptableLevel : ScriptableObject {
 
     public string infoText;
 
+
+    public Level ToLevel() {
+        var level = new Level() {
+            resultTiles = this.resultTiles,
+            pieceTiles = this.pieceTiles,
+            gridTiles = this.gridTiles,
+            teleportTiles = this.teleportTiles
+        };
+        return level;
+    }
     public string Serialize() {
         var builder = new StringBuilder();
         builder.Append("r[");
@@ -132,3 +142,22 @@ public class SaveTile {
     public int teleportIndex;
     public int teleportDir;
 }
+
+public class Level {
+    public int levelIndex;
+    public List<SaveTile> resultTiles = new List<SaveTile>();
+    public List<SaveTile> pieceTiles = new List<SaveTile>();
+    public List<SaveTile> gridTiles = new List<SaveTile>();
+    public List<SaveTile> teleportTiles = new List<SaveTile>();
+
+    public ScriptableLevel ToScriptableLevel() {
+        var slevel = ScriptableObject.CreateInstance<ScriptableLevel>();
+
+        slevel.resultTiles = this.resultTiles;
+        slevel.pieceTiles = this.pieceTiles;
+        slevel.gridTiles = this.gridTiles;
+        slevel.teleportTiles = this.teleportTiles;
+
+        return slevel;
+    }
+ }
