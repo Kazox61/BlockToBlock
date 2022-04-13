@@ -14,12 +14,28 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelIndex: 6
   resultTiles:
-  - position: {x: -5, y: 0, z: 0}
+  - position: {x: -3, y: -2, z: 0}
+    type: 0
+  - position: {x: -4, y: 1, z: 0}
     type: 0
   pieceTiles:
-  - position: {x: -2, y: 0, z: 0}
+  - position: {x: -7, y: -4, z: 0}
+    type: 2
+  - position: {x: -3, y: -4, z: 0}
+    type: 2
+  - position: {x: 0, y: -4, z: 0}
+    type: 2
+  - position: {x: -7, y: -1, z: 0}
+    type: 2
+  - position: {x: 0, y: -1, z: 0}
+    type: 2
+  - position: {x: -4, y: 0, z: 0}
     type: 1
-  - position: {x: 2, y: 0, z: 0}
+  - position: {x: -7, y: 3, z: 0}
+    type: 2
+  - position: {x: -4, y: 3, z: 0}
+    type: 2
+  - position: {x: 0, y: 3, z: 0}
     type: 2
   gridTiles:
   - position: {x: -7, y: -4, z: 0}
@@ -38,10 +54,6 @@ MonoBehaviour:
     type: 3
   - position: {x: 0, y: -4, z: 0}
     type: 3
-  - position: {x: 1, y: -4, z: 0}
-    type: 3
-  - position: {x: 2, y: -4, z: 0}
-    type: 3
   - position: {x: -7, y: -3, z: 0}
     type: 3
   - position: {x: -6, y: -3, z: 0}
@@ -58,29 +70,17 @@ MonoBehaviour:
     type: 3
   - position: {x: 0, y: -3, z: 0}
     type: 3
-  - position: {x: 1, y: -3, z: 0}
-    type: 3
-  - position: {x: 2, y: -3, z: 0}
-    type: 3
   - position: {x: -7, y: -2, z: 0}
     type: 3
   - position: {x: -6, y: -2, z: 0}
-    type: 3
-  - position: {x: -5, y: -2, z: 0}
     type: 3
   - position: {x: -4, y: -2, z: 0}
     type: 3
   - position: {x: -3, y: -2, z: 0}
     type: 3
-  - position: {x: -2, y: -2, z: 0}
-    type: 3
   - position: {x: -1, y: -2, z: 0}
     type: 3
   - position: {x: 0, y: -2, z: 0}
-    type: 3
-  - position: {x: 1, y: -2, z: 0}
-    type: 3
-  - position: {x: 2, y: -2, z: 0}
     type: 3
   - position: {x: -7, y: -1, z: 0}
     type: 3
@@ -98,10 +98,6 @@ MonoBehaviour:
     type: 3
   - position: {x: 0, y: -1, z: 0}
     type: 3
-  - position: {x: 1, y: -1, z: 0}
-    type: 3
-  - position: {x: 2, y: -1, z: 0}
-    type: 3
   - position: {x: -7, y: 0, z: 0}
     type: 3
   - position: {x: -6, y: 0, z: 0}
@@ -118,29 +114,17 @@ MonoBehaviour:
     type: 3
   - position: {x: 0, y: 0, z: 0}
     type: 3
-  - position: {x: 1, y: 0, z: 0}
-    type: 3
-  - position: {x: 2, y: 0, z: 0}
-    type: 3
   - position: {x: -7, y: 1, z: 0}
     type: 3
   - position: {x: -6, y: 1, z: 0}
-    type: 3
-  - position: {x: -5, y: 1, z: 0}
     type: 3
   - position: {x: -4, y: 1, z: 0}
     type: 3
   - position: {x: -3, y: 1, z: 0}
     type: 3
-  - position: {x: -2, y: 1, z: 0}
-    type: 3
   - position: {x: -1, y: 1, z: 0}
     type: 3
   - position: {x: 0, y: 1, z: 0}
-    type: 3
-  - position: {x: 1, y: 1, z: 0}
-    type: 3
-  - position: {x: 2, y: 1, z: 0}
     type: 3
   - position: {x: -7, y: 2, z: 0}
     type: 3
@@ -158,10 +142,6 @@ MonoBehaviour:
     type: 3
   - position: {x: 0, y: 2, z: 0}
     type: 3
-  - position: {x: 1, y: 2, z: 0}
-    type: 3
-  - position: {x: 2, y: 2, z: 0}
-    type: 3
   - position: {x: -7, y: 3, z: 0}
     type: 3
   - position: {x: -6, y: 3, z: 0}
@@ -177,9 +157,5 @@ MonoBehaviour:
   - position: {x: -1, y: 3, z: 0}
     type: 3
   - position: {x: 0, y: 3, z: 0}
-    type: 3
-  - position: {x: 1, y: 3, z: 0}
-    type: 3
-  - position: {x: 2, y: 3, z: 0}
     type: 3
   infoText: 

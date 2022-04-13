@@ -9,9 +9,9 @@ public class LevelCreatorManager : MonoBehaviour {
     public GameObject levelCreatorPanel;
     public Size currentMapSize = Size.large;
 
-    public Tilemap gridMap, resultMap, piecesMap;
-    public LevelTile gridTile, orangeTile, greenTile, redTile;
-    public GameObject indicatorGrid, indicatorOrange, indicatorGreen, indicatorRed, indicatorEraser;
+    public Tilemap gridMap, resultMap, piecesMap, teleportMap;
+    public LevelTile gridTile, orangeTile, greenTile, redTile, teleportTile;
+    public GameObject indicatorGrid, indicatorOrange, indicatorGreen, indicatorRed, indicatorTeleport, indicatorEraser;
 
     public LevelManager levelManager;
     public GameController gameController;
@@ -20,6 +20,8 @@ public class LevelCreatorManager : MonoBehaviour {
     public GameObject activeIndicator;
     public ScriptableLevel savedLevel;
     public Size currentLevelCreatorSize;
+    public int teleportDirection = 0;
+    public int teleportIndex = 0;
 
     public void Start() {
         activeIndicator = indicatorGrid;
@@ -39,7 +41,7 @@ public class LevelCreatorManager : MonoBehaviour {
         }
     }
 
-    public void Dropdown(int i) {
+    public void DropDownSize(int i) {
         if (i == 0) {
             SetMapSize(Size.large);
         }
@@ -51,7 +53,16 @@ public class LevelCreatorManager : MonoBehaviour {
         }
     }
 
+    public void DropDownDirection(int i) {
+        teleportDirection = i;
+    }
+
+    public void InputIndexTeleportTile(string input) {
+        teleportIndex = int.Parse(input);
+    }
+
     public void SelectDrawingBlock(int index) {
+        gameController.DisableTeleportFields();
         if (index == 0) {
             currentTile = gridTile;
             activeIndicator.SetActive(false);
@@ -77,6 +88,13 @@ public class LevelCreatorManager : MonoBehaviour {
             activeIndicator.SetActive(true);
         }
         else if (index == 4) {
+            gameController.ShowTeleportFields();
+            currentTile = teleportTile;
+            activeIndicator.SetActive(false);
+            activeIndicator = indicatorTeleport;
+            activeIndicator.SetActive(true);
+        }
+        else if (index == 5) {
             currentTile = null;
             activeIndicator.SetActive(false);
             activeIndicator = indicatorEraser;
@@ -97,10 +115,19 @@ public class LevelCreatorManager : MonoBehaviour {
         else if (currentTile == redTile) {
             resultMap.SetTile(pos, currentTile);
         }
+        else if (currentTile == teleportTile) {
+            var tile = ScriptableObject.CreateInstance<LevelTile>();
+            tile.sprite = teleportTile.sprite;
+            tile.type = teleportTile.type;
+            tile.teleportDir = teleportDirection;
+            tile.teleportIndex = teleportIndex;
+            teleportMap.SetTile(pos, tile);
+        }
         else if (currentTile == null) {
             gridMap.SetTile(pos, currentTile);
             piecesMap.SetTile(pos, currentTile);
             resultMap.SetTile(pos, currentTile);
+            teleportMap.SetTile(pos, currentTile);
         }
     }
 
@@ -109,29 +136,30 @@ public class LevelCreatorManager : MonoBehaviour {
     }
 
     public void SaveJsonLevelDataToHardDrive() {
-        var path = Application.persistentDataPath + "/levelData.txt";
+        var path = Application.persistentDataPath + "/levelData.json";
 
         var leveldata = levelManager.GetLevelData();
 
         FileStream fileStream = new FileStream(path, FileMode.Create);
 
         using(StreamWriter writer = new StreamWriter(fileStream)) {
-            writer.Write(leveldata.Serialize());
+            var json = JsonUtility.ToJson(leveldata.ToLevel());
+            writer.Write(json);
         }
 
     }
 
-    public void LoadJsonLevelDataToHardDrive() {
-        var path = Application.persistentDataPath + "/levelData.txt";
+    public void LoadJsonLevelDataFromHardDrive() {
+        var path = Application.persistentDataPath + "/levelData.json";
 
         if (File.Exists(path)) {
             using (StreamReader reader = new StreamReader(path)) {
-                string json = reader.ReadToEnd();
+                string data = reader.ReadToEnd();
 
-                var level = JsonUtility.FromJson<Level>(json);
+                var level = JsonUtility.FromJson<Level>(data);
 
-                var levelData = level.ToScriptableLevel();
-                levelManager.LoadLevel(levelData);
+
+                levelManager.LoadLevel(level.ToScriptableLevel());
             }
         }
 
@@ -168,7 +196,15 @@ public class LevelCreatorManager : MonoBehaviour {
             }
         }
         if (x == 0) return false;
-
+        foreach (var pos in teleportMap.cellBounds.allPositionsWithin) {
+            if (teleportMap.HasTile(pos)) {
+                if (piecesMap.GetTile<LevelTile>(pos) == teleportTile) {
+                }
+                if (!gridposes.Contains(pos)) {
+                    return false;
+                }
+            }
+        }
 
         return true;
     }

@@ -26,6 +26,9 @@ public class IngameState : StateBase {
 
     public override void OnExit() {
         Gameboard.allowMoveInput = false;
+        isAnimationFinished = false;
+        triggeredAnimation = false;
+        triggeredEndScreen = false;
         timer = 0;
     }
 

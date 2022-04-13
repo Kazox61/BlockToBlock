@@ -5,12 +5,14 @@ using UnityEngine.Tilemaps;
 using UnityEngine.Events;
 using TMPro;
 using System.Threading.Tasks;
+using System.Linq;
 
 public class Gameboard : MonoBehaviour {
     [Header("References")]
     public Tilemap gridMap;
     public Tilemap resultMap;
     public Tilemap piecesMap;
+    public Tilemap teleportMap;
     public LevelManager levelManager;
     public Animator anim;
     public TMP_Text indexText;
@@ -20,6 +22,7 @@ public class Gameboard : MonoBehaviour {
     public TMP_Text infoPanelText;
     public LevelTile orangeTile;
     public LevelTile greenTile;
+    public LevelTile teleportTile;
     public TMP_Text movesText;
     public GameController gameController;
     public CameraMovement cameraMovement;
@@ -121,13 +124,31 @@ public class Gameboard : MonoBehaviour {
         foreach (var pos in bounds.allPositionsWithin) {
             if (map.HasTile(pos)) {
                 var levelTile = map.GetTile<LevelTile>(pos);
-                if (levelTile.type.Equals(TileType.orange)) {
+                if (levelTile.type.Equals(comparedTile.type)) {
                     resultPositions.Add((Vector2Int)pos);
                 }
             }
         }
         return resultPositions;
 
+    }
+
+    public Dictionary<Vector2Int, LevelTile> GetTilesFromTilemap(Tilemap map, LevelTile comparedTile) {
+        BoundsInt bounds = map.cellBounds;
+        TileBase[] allTiles = map.GetTilesBlock(bounds);
+
+
+        Dictionary<Vector2Int, LevelTile> results = new Dictionary<Vector2Int, LevelTile>();
+
+        foreach (var pos in bounds.allPositionsWithin) {
+            if (map.HasTile(pos)) {
+                var levelTile = map.GetTile<LevelTile>(pos);
+                if (levelTile.type.Equals(comparedTile.type)) {
+                    results.Add((Vector2Int)pos, levelTile);
+                }
+            }
+        }
+        return results;
     }
 
     public void UpdateInput() {
@@ -194,11 +215,51 @@ public class Gameboard : MonoBehaviour {
         AddNeighbors();
         cells = RemoveCellsNotOnBoard(cells);
 
+        for (int i = 0; i < cells.Count; i++) {
+            piecesMap.SetTile((Vector3Int)cells[i], null);
+        }
+        TeleportTiles();
+        for (int i = 0; i < cells.Count; i++) {
+            piecesMap.SetTile((Vector3Int)cells[i], orangeTile);
+        }
+
         if (cells.Count == 0 && gameController.StateMachine.CurrentState == gameController.IngameState) {
             ResetLevelStats();
         }
         else if(cells.Count == 0) {
             gameController.StateMachine.TryEnterState(gameController.TestLevelState);
+        }
+    }
+
+    public void TeleportTiles() {
+        Dictionary<int, Vector2Int> changes = new Dictionary<int, Vector2Int>();
+
+
+        var teleportTiles = GetTilesFromTilemap(teleportMap, teleportTile);
+        foreach (var cell in cells) {
+            if (teleportTiles.ContainsKey(cell)) {
+                teleportTiles.TryGetValue(cell, out var teleportTile);
+
+                foreach (var v in teleportTiles.Values) {
+
+                    if (v.teleportIndex == teleportTile.teleportIndex && v.teleportDir != teleportTile.teleportDir) {
+
+
+                        var newPos = teleportTiles.FirstOrDefault(x => x.Value.teleportIndex == v.teleportIndex && x.Value.teleportDir == v.teleportDir).Key;
+
+
+                        int index = cells.FindIndex(s => s.Equals(cell));
+                        if (index != -1)
+
+                            changes.Add(index, newPos);
+                    }
+                }
+            }
+        }
+
+        foreach (var change in changes) {
+            cells[change.Key] = change.Value;
+
         }
     }
 

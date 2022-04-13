@@ -6,10 +6,10 @@ using UnityEditor;
 using System.IO;
 
 public class LevelManager : MonoBehaviour {
-    [SerializeField] private Tilemap resultMap, pieceMap, gridMap;
+    [SerializeField] private Tilemap resultMap, pieceMap, gridMap, teleportMap;
     [SerializeField] private int levelIndex;
 
-    public LevelTile orangeTile, greenTile, redTile, gridTile;
+    public LevelTile orangeTile, greenTile, redTile, gridTile, teleportTile;
 
     public ScriptableLevel GetLevelData() {
         var newLevel = ScriptableObject.CreateInstance<ScriptableLevel>();
@@ -17,6 +17,7 @@ public class LevelManager : MonoBehaviour {
         newLevel.levelIndex = levelIndex;
         newLevel.name = $"Level {levelIndex}";
 
+        newLevel.teleportTiles = GetTilesFromMap(teleportMap).ToList();
         newLevel.resultTiles = GetTilesFromMap(resultMap).ToList();
         newLevel.pieceTiles = GetTilesFromMap(pieceMap).ToList();
         newLevel.gridTiles = GetTilesFromMap(gridMap).ToList();
@@ -30,7 +31,9 @@ public class LevelManager : MonoBehaviour {
                     var levelTile = map.GetTile<LevelTile>(pos);
                     yield return new SaveTile() {
                         position = pos,
-                        type = levelTile.type
+                        type = levelTile.type,
+                        teleportIndex = levelTile.teleportIndex,
+                        teleportDir = levelTile.teleportDir
                     };
 
                 }
@@ -77,6 +80,20 @@ public class LevelManager : MonoBehaviour {
                     break;
             }
         }
+
+        foreach (var savedTile in level.teleportTiles) {
+            switch (savedTile.type) {
+                case TileType.teleport:
+
+                    var teleportTile = ScriptableObject.CreateInstance<LevelTile>();
+                    teleportTile.sprite = this.teleportTile.sprite;
+                    teleportTile.teleportIndex = savedTile.teleportIndex;
+                    teleportTile.teleportDir = savedTile.teleportDir;
+                    teleportTile.type = savedTile.type;
+                    teleportMap.SetTile(savedTile.position, teleportTile);
+                    break;
+            }
+        }
         return level;
     }
     public ScriptableLevel LoadLevel(int levelIndex) {
@@ -95,18 +112,20 @@ public class LevelManager : MonoBehaviour {
     }
 
     public void ConvertLevelJsonToScriptableLevel() {
-        var path = Application.persistentDataPath + "/levelData.txt";
+        var path = Application.persistentDataPath + "/levelData.json";
 
         if (File.Exists(path)) {
             using (StreamReader reader = new StreamReader(path)) {
                 string data = reader.ReadToEnd();
 
-                var levelData = ScriptableLevel.Deserialize(data);
+                var level = JsonUtility.FromJson<Level>(data);
 
-                levelData.levelIndex = levelIndex;
-                levelData.name = $"Level {levelIndex}";
+                var slevel = level.ToScriptableLevel();
+                slevel.levelIndex = levelIndex;
+                slevel.name = $"Level {levelIndex}";
+
 #if UNITY_EDITOR
-                ScriptableObjectUtility.SaveLeveFile(levelData);
+                ScriptableObjectUtility.SaveLeveFile(slevel);
 #endif
             }
         }
