@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using System.IO;
+using TMPro;
 
 public class LevelCreatorManager : MonoBehaviour {
     public Camera cam;
@@ -15,6 +16,9 @@ public class LevelCreatorManager : MonoBehaviour {
 
     public LevelManager levelManager;
     public GameController gameController;
+    public TMP_InputField inputLevelName;
+    public GameObject contentMyLevels;
+    public GameObject prefabMyLevel;
 
     public LevelTile currentTile;
     public GameObject activeIndicator;
@@ -136,7 +140,11 @@ public class LevelCreatorManager : MonoBehaviour {
     }
 
     public void SaveJsonLevelDataToHardDrive() {
-        var path = Application.persistentDataPath + "/levelData.json";
+        var directoryPath = $"{Application.persistentDataPath}/Levels";
+        if (!Directory.Exists(directoryPath)) {
+            Directory.CreateDirectory(directoryPath);
+        }
+        var path = $"{directoryPath}/{inputLevelName.text}.json";
 
         var leveldata = levelManager.GetLevelData();
 
@@ -150,19 +158,32 @@ public class LevelCreatorManager : MonoBehaviour {
     }
 
     public void LoadJsonLevelDataFromHardDrive() {
-        var path = Application.persistentDataPath + "/levelData.json";
 
-        if (File.Exists(path)) {
-            using (StreamReader reader = new StreamReader(path)) {
+
+        var directoryPath = $"{Application.persistentDataPath}/Levels";
+        var levelnames = Directory.GetFiles(directoryPath);
+        foreach (var levelname in levelnames) {
+            var obj = Instantiate(prefabMyLevel, contentMyLevels.transform);
+            var box = obj.GetComponent<BoxMyLevel>();
+
+            var tt = levelname.Split("/");
+
+            var xc = tt[tt.Length - 1];
+            var mnj = xc.Substring(7, xc.Length - 7 - 5);
+
+            print(mnj);
+            box.text.text = mnj;
+
+            using (StreamReader reader = new StreamReader(levelname)) {
                 string data = reader.ReadToEnd();
 
                 var level = JsonUtility.FromJson<Level>(data);
 
+                box.level = level.ToScriptableLevel();
 
-                levelManager.LoadLevel(level.ToScriptableLevel());
+                box.buttonEdit.onClick.AddListener(delegate () { gameController.LoadLevelFromMyLevels(box.level); });
             }
         }
-
     }
 
     public bool CanRunLevel() {

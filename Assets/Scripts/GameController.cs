@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.UI;
 public class GameController : MonoBehaviour {
     #region References
     [Header("Panels")]
@@ -125,4 +125,17 @@ public class GameController : MonoBehaviour {
     public void DisableTeleportFields() {
         panelTeleportInputs.SetActive(false);
     }
+
+    public void DeleteChildObjects(GameObject parentObj) {
+        foreach (Transform child in parentObj.transform) {
+            Destroy(child.gameObject);
+        }
+    }
+
+    public void LoadLevelFromMyLevels(ScriptableLevel level) {
+
+        levelManager.LoadLevel(level);
+        panelStartScreen.SetActive(false);
+        StateMachine.TryEnterState(LevelCreationState);
+    } 
 }

@@ -12,12 +12,6 @@ public class LevelCreationState : StateBase {
     }
 
     public override void OnEnter() {
-        if (levelCreatorManager.savedLevel == null) {
-            LevelManager.ClearLevel();
-        }
-        else {
-            LevelManager.LoadLevel(levelCreatorManager.savedLevel);
-        }
         levelCreatorManager.levelCreatorPanel.SetActive(true);
         timer = 0;
     }
