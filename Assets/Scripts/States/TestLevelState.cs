@@ -12,7 +12,7 @@ public class TestLevelState : StateBase {
         LevelManager.LoadLevel(levelCreatorManager.savedLevel);
         Gameboard.allowMoveInput = true;
         Gameboard.cells = Gameboard.GetTilePositionsFromTilemap(Gameboard.piecesMap, Gameboard.orangeTile);
-        Gameboard.cameraMovement.Cal(GameController.gameSettings.mobile);
+        Gameboard.cameraMovement.CalculateCameraZoom();
     }
 
     public override void OnExit() {

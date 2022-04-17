@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.IO;
+using Newtonsoft.Json;
 
 public class FinishedLevelState : StateBase {
 
@@ -22,6 +24,24 @@ public class FinishedLevelState : StateBase {
         triggeredAnimation = false;
         triggeredEndScreen = false;
         isAnimationFinished = false;
+
+
+        int levelIndex = Gameboard.currentLevel;
+        int score = Gameboard.moves;
+
+        var levelInfo = GameController.userInfo.GetLevelInfo(levelIndex);
+           
+        if (levelInfo == 0) {
+            GameController.userInfo.levelInfos.Add(levelIndex, score);
+            
+        }
+        else {
+            if (levelInfo > score) {
+                GameController.userInfo.levelInfos[levelIndex] = score;
+            }
+        }
+
+        SaveUserInfo();
     }
 
     public override void OnExit() {
@@ -52,5 +72,16 @@ public class FinishedLevelState : StateBase {
         }
 
         
+    }
+
+
+    public void SaveUserInfo() {
+        var path = Application.persistentDataPath + "/userinfo.json";
+        FileStream fileStream = new FileStream(path, FileMode.Create);
+
+        using (StreamWriter writer = new StreamWriter(fileStream)) {
+            var json = JsonConvert.SerializeObject(GameController.userInfo);
+            writer.Write(json);
+        }
     }
 }

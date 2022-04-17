@@ -14,6 +14,8 @@ public class LevelCreatorManager : MonoBehaviour {
     public LevelTile gridTile, orangeTile, greenTile, redTile, teleportTile;
     public GameObject indicatorGrid, indicatorOrange, indicatorGreen, indicatorRed, indicatorTeleport, indicatorEraser;
 
+    public CameraMovement cameraMovement;
+    public LootLockerManager lootLockerManager;
     public LevelManager levelManager;
     public GameController gameController;
     public TMP_InputField inputLevelName;
@@ -32,6 +34,7 @@ public class LevelCreatorManager : MonoBehaviour {
         currentTile = gridTile;
         SetMapSize(Size.large);
     }
+
     public void SetMapSize(Size size) {
         currentLevelCreatorSize = size;
         if (size.Equals(Size.large)) {
@@ -155,33 +158,52 @@ public class LevelCreatorManager : MonoBehaviour {
             writer.Write(json);
         }
 
+        TakeScreenshot(inputLevelName.text);
+
+    }
+
+    public void TakeScreenshot(string name) {
+        var directoryPath = $"{Application.persistentDataPath}/LevelScreenshots";
+
+        if (!Directory.Exists(directoryPath)) {
+            Directory.CreateDirectory(directoryPath);
+        }
+        //cameraMovement.cam.targetTexture = RenderTexture.GetTemporary(500, 500, 16);
+        cameraMovement.takeScreenshotOnNextFrame = true;
+        cameraMovement.path = $"{directoryPath}/{name}.png";
     }
 
     public void LoadJsonLevelDataFromHardDrive() {
 
 
         var directoryPath = $"{Application.persistentDataPath}/Levels";
-        var levelnames = Directory.GetFiles(directoryPath);
-        foreach (var levelname in levelnames) {
+        var levelPaths = Directory.GetFiles(directoryPath);
+        foreach (var levelPath in levelPaths) {
             var obj = Instantiate(prefabMyLevel, contentMyLevels.transform);
             var box = obj.GetComponent<BoxMyLevel>();
 
-            var tt = levelname.Split("/");
+            box.pathString = levelPath;
 
-            var xc = tt[tt.Length - 1];
-            var mnj = xc.Substring(7, xc.Length - 7 - 5);
 
-            print(mnj);
-            box.text.text = mnj;
+            var tt = levelPath.Split("/");
 
-            using (StreamReader reader = new StreamReader(levelname)) {
+            var xc = tt[^1];
+            var levelName = xc.Substring(7, xc.Length - 7 - 5);
+
+            box.text.text = levelName;
+
+            using (StreamReader reader = new StreamReader(levelPath)) {
                 string data = reader.ReadToEnd();
 
                 var level = JsonUtility.FromJson<Level>(data);
 
                 box.level = level.ToScriptableLevel();
 
-                box.buttonEdit.onClick.AddListener(delegate () { gameController.LoadLevelFromMyLevels(box.level); });
+                box.buttonEdit.onClick.AddListener(delegate () { gameController.LoadLevelFromMyLevels(box); });
+
+                box.buttonPublish.onClick.AddListener(delegate () { lootLockerManager.UploadLevel(levelName, $"{Application.persistentDataPath}/LevelScreenshots/{levelName}.png", levelPath); });
+
+                box.buttonDelete.onClick.AddListener(delegate () { gameController.DeleteLevelFromMyLevels(box); });
             }
         }
     }

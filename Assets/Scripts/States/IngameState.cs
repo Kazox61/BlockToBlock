@@ -22,6 +22,8 @@ public class IngameState : StateBase {
         triggeredEndScreen = false;
         timer = 0;
 
+        var info = GameController.userInfo.GetLevelInfo(Gameboard.currentLevel);
+        Gameboard.textPersonalRecord.text = $"Personal Record: {info}";
     }
 
     public override void OnExit() {

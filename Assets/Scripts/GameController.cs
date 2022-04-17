@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.IO;
+using Newtonsoft.Json;
+
 public class GameController : MonoBehaviour {
     #region References
     [Header("Panels")]
@@ -16,6 +19,7 @@ public class GameController : MonoBehaviour {
     [SerializeField] private Gameboard gameboard;
     [SerializeField] private LevelManager levelManager;
     public Animator anim;
+    public UserInfo userInfo;
 
     public GameObject gridDrawer, panelTeleportInputs;
 
@@ -39,11 +43,12 @@ public class GameController : MonoBehaviour {
         LevelCreationState = new LevelCreationState(this, gameboard, levelManager, levelCreatorManager);
         TestLevelState = new TestLevelState(this, gameboard, levelManager, levelCreatorManager);
 
-        
+
     }
 
     public void Start() {
         StateMachine.TryEnterState(MenuState);
+        LoadUserInfoAtStart();
     }
 
 
@@ -106,7 +111,6 @@ public class GameController : MonoBehaviour {
 
     public void ChangeToCreationState() {
         StateMachine.TryEnterState(LevelCreationState);
-        gridDrawer.SetActive(true);
         panelLevelCreator.SetActive(true);
         panelControls.SetActive(true);
         panelTestLevel.SetActive(false);
@@ -132,10 +136,33 @@ public class GameController : MonoBehaviour {
         }
     }
 
-    public void LoadLevelFromMyLevels(ScriptableLevel level) {
+    public void LoadLevelFromMyLevels(BoxMyLevel boxLevel) {
 
-        levelManager.LoadLevel(level);
+        levelManager.LoadLevel(boxLevel.level);
         panelStartScreen.SetActive(false);
+        levelCreatorManager.inputLevelName.text = boxLevel.text.text;
+
+
         StateMachine.TryEnterState(LevelCreationState);
-    } 
+    }
+
+    public void DeleteLevelFromMyLevels(BoxMyLevel boxLevel) {
+        File.Delete(boxLevel.pathString);
+        Destroy(boxLevel.gameObject);
+    }
+
+    public void LoadUserInfoAtStart() {
+        var path = Application.persistentDataPath + "/userinfo.json";
+
+        if (!File.Exists(path)) {
+            userInfo = new UserInfo();
+            return;
+        }
+
+        using (StreamReader reader = new StreamReader(path)) {
+            string data = reader.ReadToEnd();
+
+            userInfo = JsonConvert.DeserializeObject<UserInfo>(data);
+        }
+    }
 }

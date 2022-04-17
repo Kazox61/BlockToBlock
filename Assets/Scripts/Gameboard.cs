@@ -24,6 +24,7 @@ public class Gameboard : MonoBehaviour {
     public LevelTile greenTile;
     public LevelTile teleportTile;
     public TMP_Text movesText;
+    public TMP_Text textPersonalRecord, textGlobalRecord;
     public GameController gameController;
     public CameraMovement cameraMovement;
 
@@ -84,7 +85,7 @@ public class Gameboard : MonoBehaviour {
             infoPanelText.text = "";
         }
 
-        cameraMovement.Cal(gameController.gameSettings.mobile);
+        cameraMovement.CalculateCameraZoom();
     }
 
     public List<Vector2Int> RemoveCellsNotOnBoard(List<Vector2Int> cells) {

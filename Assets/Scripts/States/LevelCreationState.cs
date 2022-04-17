@@ -12,6 +12,7 @@ public class LevelCreationState : StateBase {
     }
 
     public override void OnEnter() {
+        GameController.gridDrawer.SetActive(true);
         levelCreatorManager.levelCreatorPanel.SetActive(true);
         timer = 0;
     }
