@@ -1,0 +1,13 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using TMPro;
+using UnityEngine.UI;
+
+public class BoxPublicLevel : MonoBehaviour {
+    public Image image;
+    public TMP_Text text;
+    public Button buttonPlay;
+    [HideInInspector] public ScriptableLevel level;
+    [HideInInspector] public string levelURL;
+}
