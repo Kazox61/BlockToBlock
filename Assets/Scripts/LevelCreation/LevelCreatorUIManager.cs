@@ -11,6 +11,7 @@ public class LevelCreatorUIManager : MonoBehaviour {
     [SerializeField] private LevelCreator levelCreator;
     [SerializeField] private GameObject panelTeleportFields;
     public TMP_InputField inputLevelName;
+    [SerializeField] private SceneLoadChannelSO sceneLoadChannelSO;
     #endregion
 
     #region Unity-Callbacks
@@ -22,7 +23,7 @@ public class LevelCreatorUIManager : MonoBehaviour {
     #region Button-Methods
 
     public void HomeMenuButtonClicked() {
-        SceneManager.LoadScene("MainMenu");
+        sceneLoadChannelSO.RaiseEvent(1, true);
     }
 
     public void ChangeDrawingBlock(int index) {

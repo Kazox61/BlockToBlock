@@ -10,14 +10,13 @@ using Newtonsoft.Json;
 public class LevelCreator : MonoBehaviour {
     #region references
     [SerializeField] private Camera cam;
-    public LevelAnchor levelAnchorMainMenuToLevelCreator;
-    [SerializeField] private LevelAnchor levelAnchorLevelCreatorToPlayRoom;
+    [SerializeField] private LevelAnchor levelAnchor;
     [SerializeField] private LevelCreatorUIManager levelCreatorUIManager;
     [SerializeField] private LevelHelper levelHelper;
 
     [SerializeField] private Tilemap gridMap, resultMap, piecesMap, teleportMap;
     public LevelTile gridTile, orangeTile, greenTile, redTile, teleportTile;
-
+    [SerializeField] private SceneLoadChannelSO sceneLoadChannelSO;
     [SerializeField] private GameObject containerErrorMessage, prefabPopupErrorMessage;
     #endregion
 
@@ -32,12 +31,12 @@ public class LevelCreator : MonoBehaviour {
 
     #region Unity-Callbacks
     private void Awake() {
-        if (!levelAnchorMainMenuToLevelCreator.IsSet) {
+        if (!levelAnchor.IsSet) {
             levelHelper.ClearLevel();
             return;
         }
 
-        var scriptableLevel = levelAnchorMainMenuToLevelCreator.Item;
+        var scriptableLevel = levelAnchor.Item;
         levelHelper.LoadLevel(scriptableLevel.levelData);
     }
 
@@ -181,33 +180,32 @@ public class LevelCreator : MonoBehaviour {
     }
 
     public void SaveJsonLevelDataToHardDrive() {
-        var directoryPath = $"{Application.persistentDataPath}/Levels";
+        var directoryPath = Path.Combine(Application.persistentDataPath, "Levels");
         if (!Directory.Exists(directoryPath)) {
             Directory.CreateDirectory(directoryPath);
         }
-        var path = $"{directoryPath}/{levelCreatorUIManager.inputLevelName.text}.json";
+        var levelName = levelCreatorUIManager.inputLevelName.text;
 
+        var levelPath = Path.Combine(directoryPath, levelName);
+        if (!Directory.Exists(levelPath)) {
+            Directory.CreateDirectory(levelPath);
+        }
         var leveldata = levelHelper.GetLevelData();
 
-        FileStream fileStream = new FileStream(path, FileMode.Create);
+        FileStream fileStream = new FileStream(Path.Combine(levelPath, "levelData.json"), FileMode.Create);
 
         using (StreamWriter writer = new StreamWriter(fileStream)) {
             var json = JsonConvert.SerializeObject(leveldata.ToLevel());
             writer.Write(json);
         }
 
-        TakeScreenshot(levelCreatorUIManager.inputLevelName.text);
+        TakeScreenshot(Path.Combine(levelPath, "levelScreenshot.png"));
 
     }
 
-    private void TakeScreenshot(string name) {
-        var directoryPath = $"{Application.persistentDataPath}/LevelScreenshots";
-
-        if (!Directory.Exists(directoryPath)) {
-            Directory.CreateDirectory(directoryPath);
-        }
+    private void TakeScreenshot(string path) {
         cam.GetComponent<CameraMovement>().takeScreenshotOnNextFrame = true;
-        cam.GetComponent<CameraMovement>().path = $"{directoryPath}/{name}.png";
+        cam.GetComponent<CameraMovement>().path = path;
     }
     #endregion
 
@@ -225,9 +223,9 @@ public class LevelCreator : MonoBehaviour {
 
         var transferData = new LevelTransferData() { levelData = scriptableLevel, PlayMode = PlayMode.testMode };
 
-        levelAnchorLevelCreatorToPlayRoom.Item = transferData;
+        levelAnchor.Item = transferData;
 
-        SceneManager.LoadScene("PlayRoom");
+        sceneLoadChannelSO.OnEventRaised(3, true);
     }
     #endregion
 }

@@ -274,7 +274,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &9531292
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4001,8 +4001,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cam: {fileID: 590387276}
-  levelAnchorMainMenuToLevelCreator: {fileID: 11400000, guid: f1f4362b8ac2c9046a854b6be628a970, type: 2}
-  levelAnchorLevelCreatorToPlayRoom: {fileID: 11400000, guid: eadf8d3d7ba6dbd499f403c7fa46bb60, type: 2}
+  levelAnchor: {fileID: 11400000, guid: b6d994a216355da4d9465ac89079e991, type: 2}
   levelCreatorUIManager: {fileID: 1694533115}
   levelHelper: {fileID: 1499300005}
   gridMap: {fileID: 761601718}
@@ -4014,6 +4013,7 @@ MonoBehaviour:
   greenTile: {fileID: 11400000, guid: 147a58b5fa589b349bca4734a8af8c1a, type: 2}
   redTile: {fileID: 11400000, guid: d8f402945ad79854ba031f72654c2a2f, type: 2}
   teleportTile: {fileID: 11400000, guid: dd0fa1054e0a3154eae04f7115165184, type: 2}
+  sceneLoadChannelSO: {fileID: 11400000, guid: 7256816602b274b42a46dc92f56095ce, type: 2}
   containerErrorMessage: {fileID: 1404918384}
   prefabPopupErrorMessage: {fileID: 488156156587331671, guid: b1c32d500af2f1144add5f978fb17a5c, type: 3}
   currentTile: {fileID: 0}
@@ -6141,6 +6141,7 @@ MonoBehaviour:
   levelCreator: {fileID: 1112233239}
   panelTeleportFields: {fileID: 9531291}
   inputLevelName: {fileID: 1814357186}
+  sceneLoadChannelSO: {fileID: 11400000, guid: 7256816602b274b42a46dc92f56095ce, type: 2}
 --- !u!1 &1726647068
 GameObject:
   m_ObjectHideFlags: 0
@@ -7170,70 +7171,3 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2032805859}
   m_CullTransparentMesh: 1
---- !u!1 &2133657419
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2133657422}
-  - component: {fileID: 2133657421}
-  - component: {fileID: 2133657420}
-  m_Layer: 0
-  m_Name: EventSystem
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &2133657420
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2133657419}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4f231c4fb786f3946a6b90b886c48677, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_HorizontalAxis: Horizontal
-  m_VerticalAxis: Vertical
-  m_SubmitButton: Submit
-  m_CancelButton: Cancel
-  m_InputActionsPerSecond: 10
-  m_RepeatDelay: 0.5
-  m_ForceModuleActive: 0
---- !u!114 &2133657421
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2133657419}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 76c392e42b5098c458856cdf6ecaaaa1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_FirstSelected: {fileID: 0}
-  m_sendNavigationEvents: 1
-  m_DragThreshold: 10
---- !u!4 &2133657422
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2133657419}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 6
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

@@ -900,9 +900,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   image: {fileID: 4879663890445990773}
   text: {fileID: 5618452378229732434}
+  buttonLike: {fileID: 6645030158166310460}
+  buttonDislike: {fileID: 8357556802784720843}
+  imageBGLike: {fileID: 6609050985184842495}
+  imageBGDislike: {fileID: 8379499386823474286}
   buttonPlay: {fileID: 2392426630290053083}
+  id: 0
   level: {fileID: 0}
   levelURL: 
+  voteStatus: 0
 --- !u!1 &7841199385727427347
 GameObject:
   m_ObjectHideFlags: 0

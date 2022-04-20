@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "com.lootlocker.lootlockersdk": "https://github.com/LootLocker/unity-sdk.git",
+    "com.tymski.scene-reference": "https://github.com/Tymski/SceneReference.git",
     "com.unity.adaptiveperformance.samsung.android": "4.0.0",
     "com.unity.cinemachine": "2.8.4",
     "com.unity.collab-proxy": "1.15.7",

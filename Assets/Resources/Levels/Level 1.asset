@@ -16,89 +16,173 @@ MonoBehaviour:
   resultTiles:
   - position: {x: -4, y: 3, z: 0}
     type: 0
+    teleportIndex: 0
+    teleportDir: 0
   pieceTiles:
   - position: {x: -4, y: -1, z: 0}
     type: 1
+    teleportIndex: 0
+    teleportDir: 0
   gridTiles:
   - position: {x: -6, y: -3, z: 0}
     type: 3
+    teleportIndex: 0
+    teleportDir: 0
   - position: {x: -5, y: -3, z: 0}
     type: 3
+    teleportIndex: 0
+    teleportDir: 0
   - position: {x: -4, y: -3, z: 0}
     type: 3
+    teleportIndex: 0
+    teleportDir: 0
   - position: {x: -3, y: -3, z: 0}
     type: 3
+    teleportIndex: 0
+    teleportDir: 0
   - position: {x: -2, y: -3, z: 0}
     type: 3
+    teleportIndex: 0
+    teleportDir: 0
   - position: {x: -6, y: -2, z: 0}
     type: 3
+    teleportIndex: 0
+    teleportDir: 0
   - position: {x: -5, y: -2, z: 0}
     type: 3
+    teleportIndex: 0
+    teleportDir: 0
   - position: {x: -4, y: -2, z: 0}
     type: 3
+    teleportIndex: 0
+    teleportDir: 0
   - position: {x: -3, y: -2, z: 0}
     type: 3
+    teleportIndex: 0
+    teleportDir: 0
   - position: {x: -2, y: -2, z: 0}
     type: 3
+    teleportIndex: 0
+    teleportDir: 0
   - position: {x: -6, y: -1, z: 0}
     type: 3
+    teleportIndex: 0
+    teleportDir: 0
   - position: {x: -5, y: -1, z: 0}
     type: 3
+    teleportIndex: 0
+    teleportDir: 0
   - position: {x: -4, y: -1, z: 0}
     type: 3
+    teleportIndex: 0
+    teleportDir: 0
   - position: {x: -3, y: -1, z: 0}
     type: 3
+    teleportIndex: 0
+    teleportDir: 0
   - position: {x: -2, y: -1, z: 0}
     type: 3
+    teleportIndex: 0
+    teleportDir: 0
   - position: {x: -6, y: 0, z: 0}
     type: 3
+    teleportIndex: 0
+    teleportDir: 0
   - position: {x: -5, y: 0, z: 0}
     type: 3
+    teleportIndex: 0
+    teleportDir: 0
   - position: {x: -4, y: 0, z: 0}
     type: 3
+    teleportIndex: 0
+    teleportDir: 0
   - position: {x: -3, y: 0, z: 0}
     type: 3
+    teleportIndex: 0
+    teleportDir: 0
   - position: {x: -2, y: 0, z: 0}
     type: 3
+    teleportIndex: 0
+    teleportDir: 0
   - position: {x: -6, y: 1, z: 0}
     type: 3
+    teleportIndex: 0
+    teleportDir: 0
   - position: {x: -5, y: 1, z: 0}
     type: 3
+    teleportIndex: 0
+    teleportDir: 0
   - position: {x: -4, y: 1, z: 0}
     type: 3
+    teleportIndex: 0
+    teleportDir: 0
   - position: {x: -3, y: 1, z: 0}
     type: 3
+    teleportIndex: 0
+    teleportDir: 0
   - position: {x: -2, y: 1, z: 0}
     type: 3
+    teleportIndex: 0
+    teleportDir: 0
   - position: {x: -6, y: 2, z: 0}
     type: 3
+    teleportIndex: 0
+    teleportDir: 0
   - position: {x: -5, y: 2, z: 0}
     type: 3
+    teleportIndex: 0
+    teleportDir: 0
   - position: {x: -4, y: 2, z: 0}
     type: 3
+    teleportIndex: 0
+    teleportDir: 0
   - position: {x: -3, y: 2, z: 0}
     type: 3
+    teleportIndex: 0
+    teleportDir: 0
   - position: {x: -2, y: 2, z: 0}
     type: 3
+    teleportIndex: 0
+    teleportDir: 0
   - position: {x: -6, y: 3, z: 0}
     type: 3
+    teleportIndex: 0
+    teleportDir: 0
   - position: {x: -5, y: 3, z: 0}
     type: 3
+    teleportIndex: 0
+    teleportDir: 0
   - position: {x: -4, y: 3, z: 0}
     type: 3
+    teleportIndex: 0
+    teleportDir: 0
   - position: {x: -3, y: 3, z: 0}
     type: 3
+    teleportIndex: 0
+    teleportDir: 0
   - position: {x: -2, y: 3, z: 0}
     type: 3
+    teleportIndex: 0
+    teleportDir: 0
   - position: {x: -6, y: 4, z: 0}
     type: 3
+    teleportIndex: 0
+    teleportDir: 0
   - position: {x: -5, y: 4, z: 0}
     type: 3
+    teleportIndex: 0
+    teleportDir: 0
   - position: {x: -4, y: 4, z: 0}
     type: 3
+    teleportIndex: 0
+    teleportDir: 0
   - position: {x: -3, y: 4, z: 0}
     type: 3
+    teleportIndex: 0
+    teleportDir: 0
   - position: {x: -2, y: 4, z: 0}
     type: 3
-  infoText: Move the orange Blocks on the red Blocks.<br>You can also use WASD and
-    R for restart.
+    teleportIndex: 0
+    teleportDir: 0
+  teleportTiles: []
+  infoText: Move the orange Blocks on the red Blocks

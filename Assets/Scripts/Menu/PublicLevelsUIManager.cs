@@ -10,10 +10,25 @@ public class PublicLevelsUIManager : MonoBehaviour {
     [SerializeField] private TMP_Text textTab1, textTab2, textTab3;
     [SerializeField] private TMP_InputField inputSearchText;
     [SerializeField] private MainMenuUIManager mainMenuUIManager;
-    [SerializeField] private LootLockerManager lootLockerManager;
+    private LootLockerManager lootLockerManager;
     [SerializeField] private Color unfocusedColor;
+    private UserInfoManager userInfoManager;
+    [SerializeField] private ManagerAnchor managerAnchor;
 
     private SearchMode searchMode;
+
+    public void Awake() {
+        if (managerAnchor.IsSet) {
+            SetManagers(managerAnchor.Item);
+        }
+    }
+
+    public void SetManagers(ManagerData data) {
+        lootLockerManager = data.lootLockerManager;
+        userInfoManager = data.userInfoManager;
+    }
+
+
     public void OnTabClicked(int i) {
         mainMenuUIManager.DeleteChildObjects(contentHolder);
         tabFocus1.SetActive(false);
@@ -56,7 +71,21 @@ public class PublicLevelsUIManager : MonoBehaviour {
         }
     }
 
+    public void VoteLike(BoxPublicLevel box) {
+        if (!box.voteStatus.Equals(VoteStatus.none)) return;
+        box.voteStatus = VoteStatus.like;
+        box.imageBGLike.sprite = lootLockerManager.spriteVoteLike;
+        userInfoManager.UserInfo.votes.Add(box.id, true);
+        //lootLockerManager.UploadVotesToAsset(box);
+    }
 
+    public void VoteDislike(BoxPublicLevel box) {
+        if (!box.voteStatus.Equals(VoteStatus.none)) return;
+        box.voteStatus = VoteStatus.dislike;
+        box.imageBGDislike.sprite = lootLockerManager.spriteVoteDislike;
+        userInfoManager.UserInfo.votes.Add(box.id, false);
+        //@TODO Upload Vote To Asset
+    }
 }
 
 public enum SearchMode {

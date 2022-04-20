@@ -7,13 +7,43 @@ using TMPro;
 using System;
 using UnityEngine.Networking;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 public class LootLockerManager : MonoBehaviour {
+    [HideInInspector] public MainMenuUIManager mainMenuUIManager;
+    [HideInInspector] public PublicLevelsUIManager publicLevelsUIManager;
+    [HideInInspector] public MessageManager messageManager;
+    [SerializeField] private UserInfoManager userInfoManager;
+    public GameObject prefabPublicLevel;
+    [HideInInspector] public GameObject contentPublicLevels;
+    [SerializeField] private SceneAnchor sceneAnchor;
+    [SerializeField] private ManagerAnchor managerAnchor;
+    [SerializeField] private SceneLoadChannelSO sceneLoadChannelSO;
 
-    [SerializeField] private MainMenuUIManager mainMenuUIManager;
+    [SerializeField] private LevelAnchor levelAnchor;
 
-    public GameObject prefabPublicLevel, contentPublicLevels;
+    public Sprite spriteNoVote, spriteVoteLike, spriteVoteDislike;
 
+    public void OnEnable() {
+        sceneAnchor.OnEventRaised += SetData;
+        managerAnchor.Item = new ManagerData() {
+            lootLockerManager = this,
+            userInfoManager = userInfoManager
+        };
+    }
+
+    public void Awake() {
+        sceneLoadChannelSO.RaiseEvent(1, false);
+    }
+
+    public void SetData(SceneData data) {
+        mainMenuUIManager = data.mainMenuUIManager;
+        publicLevelsUIManager = data.publicLevelsUIManager;
+        messageManager = data.messageManager;
+        contentPublicLevels = data.contentPublicLevels;
+    }
+
+    #region Login/Register
     private void Start() {
         CheckSession();
 
@@ -30,14 +60,14 @@ public class LootLockerManager : MonoBehaviour {
         });
     }
 
-    public void SignupClicked() {
+    public void Signup() {
         LootLockerSDKManager.WhiteLabelSignUp(mainMenuUIManager.inputSignupEmail.text, mainMenuUIManager.inputSignupPassword.text, (response) => {
             if (response.success) {
                 LootLockerSDKManager.WhiteLabelLogin(mainMenuUIManager.inputSignupEmail.text, mainMenuUIManager.inputSignupPassword.text, true, (response) => {
                     if (response.success) {
                         Debug.Log("Logged in");
                         LootLockerSDKManager.SetPlayerName(mainMenuUIManager.inputSignupUsername.text, (response) => {
-                            if (response.success) Debug.Log("Username changed");
+                            mainMenuUIManager.popupSignup.SetActive(false);
                         });
                     }
                 });
@@ -45,46 +75,51 @@ public class LootLockerManager : MonoBehaviour {
         });
     }
 
-    public void LoginClicked() {
+    public void Login() {
         LootLockerSDKManager.WhiteLabelLogin(mainMenuUIManager.inputLoginEmail.text, mainMenuUIManager.inputLoginPassword.text, true, (response) => {
             if (response.success) {
-                Debug.Log("Logged in");
+                mainMenuUIManager.popupLogin.SetActive(false);
             }
         });
     }
+    #endregion
 
+    #region Upload Data
     public void UploadLevel(string levelName, string screenshotFilePath, string levelFilePath) {
         LootLockerSDKManager.CreatingAnAssetCandidate(levelName, (response) => {
             if (response.success) {
                 UploadLevelData(response.asset_candidate_id, levelName, screenshotFilePath, levelFilePath);
             }
-            else {
-
-            }
         });
+        
     }
 
     public void UploadLevelData(int levelID, string levelName, string screenshotFilePath, string levelFilePath) {
 
         LootLocker.LootLockerEnums.FilePurpose screenshotFileType = LootLocker.LootLockerEnums.FilePurpose.primary_thumbnail;
 
+        Dictionary<string, string> votes = new Dictionary<string, string>();
+        votes.Add("counterVotesLike", "0");
+        votes.Add("counterVotesDislike", "0");
+
+
         LootLockerSDKManager.AddingFilesToAssetCandidates(levelID, screenshotFilePath, levelName, screenshotFileType, (screenshotResponse) => {
             if (screenshotResponse.success) {
                 LootLocker.LootLockerEnums.FilePurpose textFileType = LootLocker.LootLockerEnums.FilePurpose.file;
                 LootLockerSDKManager.AddingFilesToAssetCandidates(levelID, levelFilePath, levelName, textFileType, (fileResponse) => {
-                    
                     if (fileResponse.success) {
-                        LootLockerSDKManager.UpdatingAnAssetCandidate(levelID, true, (updatedResponse) => {
-
-                        });
+                        LootLockerSDKManager.UpdatingAnAssetCandidate(levelID, true, (finishedResponse) => {
+                            GUIUtility.systemCopyBuffer = finishedResponse.asset_candidate.asset_id.ToString();
+                            messageManager.SpawnMessage(8, "Copied LevelID to clipboard!");
+                        }, null, votes);
                     }
                 });
             }
         });
     }
+    #endregion
 
-    
-
+    #region Download and Sort Assets
     public async Task<List<LootLockerCommonAsset>> GetAllAssets() {
         var assets = new List<LootLockerCommonAsset>();
         LootLockerSDKManager.GetAssetListWithCount(10000, (response) => {
@@ -104,10 +139,10 @@ public class LootLockerManager : MonoBehaviour {
     public void AddLevelsToContent(List<LootLockerCommonAsset> assets) {
         foreach (var asset in assets) {
             var item = Instantiate(prefabPublicLevel, contentPublicLevels.transform);
-
             var publicLevel = item.GetComponent<BoxPublicLevel>();
-
             publicLevel.text.text = asset.name;
+
+            publicLevel.id = asset.id;
 
             LootLockerFile[] levelImageFiles = asset.files;
 
@@ -115,7 +150,24 @@ public class LootLockerManager : MonoBehaviour {
 
             publicLevel.levelURL = levelImageFiles[1].url.ToString();
 
+            publicLevel.buttonLike.onClick.AddListener(delegate () { publicLevelsUIManager.VoteLike(publicLevel); });
+
+            publicLevel.buttonDislike.onClick.AddListener(delegate () { publicLevelsUIManager.VoteDislike(publicLevel); });
+
             publicLevel.buttonPlay.onClick.AddListener(delegate () { StartCoroutine(DownloadLevelData(publicLevel)); });
+
+            if (userInfoManager.UserInfo.votes.TryGetValue(asset.id, out var voteInfo)) {
+                if (voteInfo) {
+                    publicLevel.imageBGLike.sprite = spriteVoteLike;
+                    publicLevel.imageBGDislike.sprite = spriteNoVote;
+                    publicLevel.voteStatus = VoteStatus.like;
+                }
+                else {
+                    publicLevel.imageBGDislike.sprite = spriteVoteDislike;
+                    publicLevel.imageBGLike.sprite = spriteNoVote;
+                    publicLevel.voteStatus = VoteStatus.dislike;
+                }
+            }
         }
     }
     public async void SearchLevelByLevelname(string levelname) {
@@ -140,24 +192,47 @@ public class LootLockerManager : MonoBehaviour {
                     //Nothing found
                     return;
                 }
-
-                var item = Instantiate(prefabPublicLevel, contentPublicLevels.transform);
-
-                var publicLevel = item.GetComponent<BoxPublicLevel>();
-
-                publicLevel.text.text = response.assets[0].name;
-
-                LootLockerFile[] levelImageFiles = response.assets[0].files;
-
-                StartCoroutine(DownloadLevelImage(levelImageFiles[0].url.ToString(), publicLevel));
-
-                publicLevel.levelURL = levelImageFiles[1].url.ToString();
-
-                publicLevel.buttonPlay.onClick.AddListener(delegate () { StartCoroutine(DownloadLevelData(publicLevel)); });
+                foreach (var x in response.assets[0].storage) {
+                    Debug.Log($"{x.key} / {x.value}");
+                }
+                AddLevelsToContent(response.assets.ToList());
             }
         });
+        
     }
 
+    public void UploadVotesToAsset(BoxPublicLevel box) {
+        string[] ids = new string[] { box.id.ToString() };
+        var counterLikes = 0;
+        var counterDislikes = 0;
+        LootLockerSDKManager.GetAssetsById(ids, (response) => {
+            if (response.success) {
+                if (response.assets.Length != 1) {
+                    Debug.Log("Something went wrong!!!!");
+                    return;
+                }
+                counterLikes = int.Parse(response.assets[0].storage.Where(x => x.key == "counterVotesLike").FirstOrDefault().value);
+                counterDislikes = int.Parse(response.assets[0].storage.Where(x => x.key == "counterVotesDislike").FirstOrDefault().value);
+                Debug.Log(counterLikes);
+                Debug.Log(counterDislikes);
+                Debug.Log(box.id);
+
+                Dictionary<string, string> votes = new Dictionary<string, string>();
+                votes.Add("counterVotesLike", (counterLikes+1).ToString());
+
+                LootLockerSDKManager.UpdateOneOrMoreKeyValuePairForAssetInstances(box.id, votes, (response) => {
+
+                });
+            }
+        });
+        
+        
+        
+    }
+
+    #endregion
+
+    #region Download Data
     IEnumerator DownloadLevelImage(string url, BoxPublicLevel publicLevel) {
         UnityWebRequest www = UnityWebRequestTexture.GetTexture(url);
 
@@ -175,9 +250,15 @@ public class LootLockerManager : MonoBehaviour {
 
         yield return www.SendWebRequest();
 
-        var level = JsonUtility.FromJson<Level>(www.downloadHandler.text);
+        var level = JsonConvert.DeserializeObject<Level>(www.downloadHandler.text);
 
-        yield return new WaitForSeconds(1f);
+        //yield return new WaitForSeconds(1f);
+
+        var transferData = new LevelTransferData() { levelData = level.ToScriptableLevel(), PlayMode = PlayMode.customizedMode };
+        levelAnchor.Item = transferData;
+
+        sceneLoadChannelSO.RaiseEvent(3, true);
 
     }
+    #endregion
 }

@@ -19,25 +19,66 @@ public class MainMenuUIManager : MonoBehaviour {
 
     public TMP_InputField inputSignupEmail, inputSignupUsername, inputSignupPassword, inputLoginEmail, inputLoginPassword;
 
-    public GameObject prefabMyLevel, contentMyLevels;
-
+    public GameObject prefabMyLevel, contentMyLevels, contentPublicLevels;
     public LootLockerManager lootLockerManager;
-    [SerializeField] private LevelAnchor levelAnchorMainMenuToLevelCreator;
-    [SerializeField] private LevelAnchor levelAnchorMainMenuToPlayRoom;
+    public UserInfoChannelSO userInfoChannelSO;
+    [SerializeField] private LevelIcon[] levelIcons;
+    [SerializeField] private MessageManager messageManager;
+    [SerializeField] private PublicLevelsUIManager publicLevelsUIManager;
+    [SerializeField] private LevelAnchor levelAnchor;
+    [SerializeField] private SceneAnchor sceneAnchor;
+    [SerializeField] private ManagerAnchor managerAnchor;
+    [SerializeField] private SceneLoadChannelSO sceneLoadChannelSO;
+    #endregion
+
+    #region Unity-Callbacks
+    private void Awake() {
+        if (managerAnchor.IsSet) {
+            lootLockerManager = managerAnchor.Item.lootLockerManager;
+        }
+    }
+    private void Start() {
+        SceneData sceneData = new SceneData() {
+            contentPublicLevels = contentPublicLevels,
+            mainMenuUIManager = this,
+            publicLevelsUIManager = publicLevelsUIManager,
+            messageManager = messageManager
+        };
+        sceneAnchor.Item = sceneData;
+    }
     #endregion
     #region ButtonClickMethods
 
+    public void ButtonLoginClicked() {
+        lootLockerManager.Login();
+    }
+
+    public void ButtonSignupClicked() {
+        lootLockerManager.Signup();
+    }
 
     public void ButtonSettingsClicked() {
         popupSettings.SetActive(true);
     }
 
     public void ButtonLevelSelectionClicked() {
+        levelIcons[0].locker.SetActive(false);
+        levelIcons[0].canPlay = true;
+        var levelInfos = userInfoChannelSO.GetLevelInfos();
+        for (int i = levelIcons.Length - 1; i >= 1; i--) {
+            if (levelInfos.ContainsKey(i)) {
+                levelIcons[i].locker.SetActive(false);
+                levelIcons[i].canPlay = true;
+            }
+        }
+
+
+
         popupLevelSeletion.SetActive(true);
     }
 
     public void ButtonLevelCreatorClicked() {
-        SceneManager.LoadScene("LevelCreator");
+        sceneLoadChannelSO.RaiseEvent(2, true);
     }
 
     public void ButtonMyLevelsClicked() {
@@ -63,23 +104,27 @@ public class MainMenuUIManager : MonoBehaviour {
     #region LoadLevel
     public void LoadJsonLevelDataFromHardDrive() {
 
-        var directoryPath = $"{Application.persistentDataPath}/Levels";
-        var levelPaths = Directory.GetFiles(directoryPath);
+        var directoryPath = Path.Combine(Application.persistentDataPath, "Levels");
+        var levelPaths = Directory.GetDirectories(directoryPath);
+        Debug.Log(directoryPath);
         foreach (var levelPath in levelPaths) {
+            Debug.Log(levelPath);
+
             var obj = Instantiate(prefabMyLevel, contentMyLevels.transform);
             var box = obj.GetComponent<BoxMyLevel>();
-
+            var levelName = new DirectoryInfo(levelPath).Name;
+            var levelDataPath = Path.Combine(levelPath, "levelData.json");
+            var levelScreenshotPath = Path.Combine(levelPath, "levelScreenshot.png");
             box.pathString = levelPath;
-
-
-            var tt = levelPath.Split("/");
-
-            var xc = tt[^1];
-            var levelName = xc.Substring(7, xc.Length - 7 - 5);
 
             box.text.text = levelName;
 
-            using (StreamReader reader = new StreamReader(levelPath)) {
+            byte[] imageData = File.ReadAllBytes(levelScreenshotPath);
+            Texture2D texture = new Texture2D(100, 100);
+            texture.LoadImage(imageData);
+            var sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+            box.image.sprite = sprite;
+            using (StreamReader reader = new StreamReader(levelDataPath)) {
                 string data = reader.ReadToEnd();
 
                 var level = JsonConvert.DeserializeObject<Level>(data);
@@ -90,7 +135,7 @@ public class MainMenuUIManager : MonoBehaviour {
 
                 box.buttonPlay.onClick.AddListener(delegate () { PlayMylevelClicked(box); });
 
-                box.buttonUpload.onClick.AddListener(delegate () { lootLockerManager.UploadLevel(levelName, $"{Application.persistentDataPath}/LevelScreenshots/{levelName}.png", levelPath); });
+                box.buttonUpload.onClick.AddListener(delegate () { lootLockerManager.UploadLevel(levelName, levelScreenshotPath, levelDataPath); });
 
                 box.buttonDelete.onClick.AddListener(delegate () { DeleteMyLevelClicked(box); });
             }
@@ -100,50 +145,39 @@ public class MainMenuUIManager : MonoBehaviour {
 
     public void EditMyLevelClicked(BoxMyLevel boxLevel) {
         var transferData = new LevelTransferData() { levelData = boxLevel.level };
-        levelAnchorMainMenuToLevelCreator.Item = transferData;
-        SceneManager.LoadScene("LevelCreator");
+        levelAnchor.Item = transferData;
+        sceneLoadChannelSO.RaiseEvent(2, true);
     }
 
     public void PlayMylevelClicked(BoxMyLevel boxLevel) {
         var transferData = new LevelTransferData() { levelData = boxLevel.level, PlayMode = PlayMode.customizedMode };
-        levelAnchorMainMenuToPlayRoom.Item = transferData;
-        SceneManager.LoadScene("PlayRoom");
+        levelAnchor.Item = transferData;
+        sceneLoadChannelSO.RaiseEvent(3, true);
     }
 
     public void DeleteMyLevelClicked(BoxMyLevel boxLevel) {
-        File.Delete(boxLevel.pathString);
+        Directory.Delete(boxLevel.pathString, true);
         Destroy(boxLevel.gameObject);
     }
     #endregion
     public void EnterPlayMode(int levelIndex) {
+        if (!levelIcons[levelIndex-1].canPlay) {
+            return;
+        }
+
         var level = Resources.Load<ScriptableLevel>($"Levels/Level {levelIndex}");
 
         if (level == null) {
             Debug.LogError($"Level {levelIndex} does not exist.");
         }
         var transferData = new LevelTransferData() { levelData = level, PlayMode = PlayMode.mapMode, levelIndex = levelIndex };
-        levelAnchorMainMenuToPlayRoom.Item = transferData;
-        SceneManager.LoadScene("PlayRoom");
+        levelAnchor.Item = transferData;
+        sceneLoadChannelSO.RaiseEvent(3, true);
     }
 
     public void DeleteChildObjects(GameObject parentObj) {
         foreach (Transform child in parentObj.transform) {
             Destroy(child.gameObject);
-        }
-    }
-
-    public void LoadUserInfoAtStart() {
-        var path = Application.persistentDataPath + "/userinfo.json";
-
-        if (!File.Exists(path)) {
-            //userInfo = new UserInfo();
-            return;
-        }
-
-        using (StreamReader reader = new StreamReader(path)) {
-            string data = reader.ReadToEnd();
-
-            //userInfo = JsonConvert.DeserializeObject<UserInfo>(data);
         }
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using UnityEngine.Tilemaps;
-
+using UnityEngine.Events;
 public class GameplayHandler : MonoBehaviour {
     #region References
     [SerializeField] private Tilemap resultMap, pieceMap, gridMap, teleportMap;
@@ -11,35 +11,40 @@ public class GameplayHandler : MonoBehaviour {
     [SerializeField] private LevelTile orangeTile, greenTile, redTile, gridTile, teleportTile;
 
     [SerializeField] private PlayRoomUIManager playRoomUIManager;
-    [SerializeField] private LevelHelper levelHelper;
-    [SerializeField] private LevelAnchor levelAnchorLevelCreatorToPlayRoom;
-    [SerializeField] private LevelAnchor levelAnchorMainMenuToPlayRoom;
+    public LevelHelper levelHelper;
+    [SerializeField] private LevelAnchor levelAnchor;
     [SerializeField] private CameraMovement cameraMovement;
+    public UnityAction OnMapLevelFinishedAction;
     #endregion
 
     #region Variables
     private List<Vector2Int> cells;
     private int currentLevelIndex = 1;
-    private int movesCounter = 0;
-    [SerializeField] public ScriptableLevel currentPlayedLevel;
+    public int MovesCounter { get; private set; }
+    [HideInInspector] public ScriptableLevel currentPlayedLevel;
     private PlayMode PlayMode;
     #endregion
 
     #region Unity-Callbacks
     private void Awake() {
-        if (levelAnchorLevelCreatorToPlayRoom.IsSet) {
-            var scriptableLevel = levelAnchorLevelCreatorToPlayRoom.Item.levelData;
-            levelHelper.LoadLevel(scriptableLevel);
-            currentPlayedLevel = scriptableLevel;
-            PlayMode = levelAnchorLevelCreatorToPlayRoom.Item.PlayMode;
-        }
-        else if(levelAnchorMainMenuToPlayRoom.IsSet) {
-            var Item = levelAnchorMainMenuToPlayRoom.Item;
+        if(levelAnchor.IsSet) {
+            var Item = levelAnchor.Item;
             var scriptableLevel = Item.levelData;
             levelHelper.LoadLevel(scriptableLevel);
             currentPlayedLevel = scriptableLevel;
             PlayMode = Item.PlayMode;
-            UpdateLevelIndex(Item.levelIndex);
+            
+
+            if (PlayMode.Equals(PlayMode.mapMode)) {
+                playRoomUIManager.currentLevelIndex = Item.levelIndex;
+                UpdateLevelIndex(Item.levelIndex);
+                playRoomUIManager.UpdatePersonalRecordText();
+            }
+
+            if (PlayMode.Equals(PlayMode.testMode)) {
+                playRoomUIManager.buttonBackToEditMode.SetActive(true);
+                playRoomUIManager.panelMapGameplay.SetActive(false);
+            }
             
         }
 
@@ -48,6 +53,7 @@ public class GameplayHandler : MonoBehaviour {
     }
 
     private void Start() {
+        MovesCounter = 0;
         var cellsWithInfo = GetTilesFromTilemap(pieceMap, orangeTile);
         cells = cellsWithInfo.Keys.ToList();
     }
@@ -79,7 +85,7 @@ public class GameplayHandler : MonoBehaviour {
             pieceMap.SetTile((Vector3Int)cells[i], orangeTile);
         }
 
-        UpdateMoveCounter(movesCounter + 1);
+        UpdateMoveCounter(MovesCounter + 1);
 
         AddNeighbors();
 
@@ -103,10 +109,10 @@ public class GameplayHandler : MonoBehaviour {
 
         if (GameIsFinished()) {
             if (PlayMode.Equals(PlayMode.mapMode)) {
-
+                OnMapLevelFinishedAction.Invoke();
             }
             else if (PlayMode.Equals(PlayMode.customizedMode)) {
-
+                Debug.Log("CustomizedEndScreen");
             }
         }
     }
@@ -206,6 +212,16 @@ public class GameplayHandler : MonoBehaviour {
     }
     #endregion
 
+
+    public void LoadLevel(int levelIndex) {
+        UpdateMoveCounter(0);
+        currentPlayedLevel = levelHelper.LoadLevel(levelIndex);
+        UpdateLevelIndex(levelIndex);
+        var cellsWithInfo = GetTilesFromTilemap(pieceMap, orangeTile);
+        cells = cellsWithInfo.Keys.ToList();
+
+        cameraMovement.CalculateCameraZoom();
+    }
     public void ResetLevel() {
         UpdateMoveCounter(0);
         levelHelper.LoadLevel(currentPlayedLevel);
@@ -217,8 +233,8 @@ public class GameplayHandler : MonoBehaviour {
     }
 
     public void UpdateMoveCounter(int moveCount) {
-        movesCounter = moveCount;
-        playRoomUIManager.textMovesCounter.text = $"Moves: {movesCounter}";
+        MovesCounter = moveCount;
+        playRoomUIManager.textMovesCounter.text = $"Moves: {MovesCounter}";
     }
 
     public void UpdateLevelIndex(int levelIndex) {
